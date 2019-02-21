@@ -7,13 +7,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import com.facebook.react.uimanager.PointerEvents;
-import com.facebook.react.uimanager.ReactPointerEventsView;
 
-public class Screen extends ViewGroup implements ReactPointerEventsView {
+public class Screen extends ViewGroup {
 
   public static class ScreenFragment extends Fragment {
 
@@ -68,11 +65,6 @@ public class Screen extends ViewGroup implements ReactPointerEventsView {
   @Override
   public boolean hasOverlappingRendering() {
     return mTransitioning;
-  }
-
-  @Override
-  public PointerEvents getPointerEvents() {
-    return mTransitioning ? PointerEvents.NONE : PointerEvents.AUTO;
   }
 
   @Override
