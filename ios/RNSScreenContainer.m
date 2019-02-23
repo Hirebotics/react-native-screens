@@ -109,23 +109,26 @@
     }
   }
 
-  // add new screens in order they are placed in subviews array
-  for (RNSScreenView *screen in _reactSubviews) {
-    if (screen.active && ![_activeScreens containsObject:screen]) {
-      [_activeScreens addObject:screen];
-      [self attachScreen:screen];
-    } else if (screen.active && activeScreenAdded) {
-      // if we are adding new active screen, we perform remounting of all already marked as active
-      // this is done to mimick the effect UINavigationController has when willMoveToWindow:nil is
-      // triggered before the animation starts
-      if (activeScreenAdded) {
+  // if we are adding new active screen, we perform remounting of all already marked as active
+  // this is done to mimick the effect UINavigationController has when willMoveToWindow:nil is
+  // triggered before the animation starts
+  if (activeScreenAdded) {
+    for (RNSScreenView *screen in _reactSubviews) {
+      if (screen.active && [_activeScreens containsObject:screen]) {
         [self detachScreen:screen];
+        // disable interactions for the duration of transition
+        screen.userInteractionEnabled = NO;
+      }
+    }
+
+    // add new screens in order they are placed in subviews array
+    for (RNSScreenView *screen in _reactSubviews) {
+      if (screen.active) {
         [self attachScreen:screen];
       }
     }
   }
 
-<<<<<<< HEAD
   // if we are down to one active screen it means the transitioning is over and we want to notify
   // the transition has finished
   if ((activeScreenRemoved || activeScreenAdded) && _activeScreens.count == 1) {
@@ -135,8 +138,6 @@
     [singleActiveScreen notifyFinishTransitioning];
   }
 
-=======
->>>>>>> parent of 5893d9a... Restore first responder of view controller when screen reactivates (#48)
   if ((activeScreenRemoved || activeScreenAdded) && _controller.presentedViewController == nil) {
     // if user has reachability enabled (one hand use) and the window is slided down the below
     // method will force it to slide back up as it is expected to happen with UINavController when
